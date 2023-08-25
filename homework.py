@@ -52,7 +52,6 @@ class Training:
 
 class Running(Training):
     """Тренировка: бег."""
-
     CALORIES_MEAN_SPEED_MULTIPLIER = 18
     CALORIES_MEAN_SPEED_SHIFT = 1.79
 
@@ -78,7 +77,6 @@ class SportWalking(Training):
 
 class Swimming(Training):
     """Тренировка: плавание."""
-
     LEN_STEP = 1.38
     M_IN_KM = 1000
 
