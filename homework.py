@@ -1,10 +1,18 @@
 class InfoMessage:
     """Информационное сообщение о тренировке."""
-    training_type: str
-    duration: float
-    distance: float
-    speed: float
-    calories: float
+    def __init__(
+        self,
+        training_type: str,
+        duration: float,
+        distance: float,
+        speed: float,
+        calories: float
+    ):
+        self.training_type: str
+        self.duration: float
+        self.distance: float
+        self.speed: float
+        self.calories: float
 
     def get_message(self) -> str:
         return (
@@ -21,6 +29,7 @@ class Training:
 
     LEN_STEP = 0.65
     M_IN_KM = 1000
+    MINS_IN_HOUR = 60
 
     def __init__(self, action: int, duration: float, weight: float) -> None:
         self.action = action
@@ -64,7 +73,7 @@ class Running(Training):
         )
 
 
-class SportWalking(Training):
+class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
 
     def get_spent_calories(self) -> float:
@@ -79,6 +88,7 @@ class Swimming(Training):
     """Тренировка: плавание."""
     LEN_STEP = 1.38
     M_IN_KM = 1000
+    SPEED_SHIFT = 1.1
 
     def get_distance(self) -> float:
         return self.length_pool * self.count_pool / self.M_IN_KM
@@ -98,7 +108,7 @@ def read_package(workout_type: str, data: list) -> Training:
     workout_class = {
         'SWM': Swimming,
         'RUN': Running,
-        'WLK': SportWalking
+        'WLK': SportsWalking
     }
 
     if workout_type in workout_class:
