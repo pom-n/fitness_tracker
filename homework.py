@@ -86,7 +86,7 @@ class SportsWalking(Training):
     COFF_SP = 0.035
     COFFSP2 = 0.029
     MIN_IN_H = 60
-    TO_M_PER_SEC = 0.278 / 3.6
+    TO_M_PER_SEC = 0.278
     CM_TO_METERS = 100
 
     def __init__(self, action: int, duration: float,
