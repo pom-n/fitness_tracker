@@ -70,14 +70,17 @@ class Running(Training):
         )
 
 
-class SportWalking(Training):
+class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
+
+    def __init__(self, action: int, duration: float, weight: float) -> None:
+        super().__init__(action, duration, weight)
 
     def get_spent_calories(self) -> float:
         return (
             (0.035 * self.weight
              + (self.get_mean_speed()**2 / self.weight)
-             * 0.029 * self.weight) * self.duration * self.HOURS_IN_MINUTES
+             * 0.029 * self.weight) * self.duration * 60
         )
 
 
@@ -87,10 +90,10 @@ class Swimming(Training):
     LEN_STEP = 1.38
     M_IN_KM = 1000
     MEAN_SPEED_SHIFT = 1.1
+    CALORIES_MEAN_SPEED_MULTIPLIER = 2
 
     def __init__(self, action: int, duration: float, weight: float,
                  length_pool: float, count_pool: int) -> None:
-
         super().__init__(action, duration, weight)
         self.length_pool = length_pool
         self.count_pool = count_pool
@@ -101,7 +104,8 @@ class Swimming(Training):
     def get_spent_calories(self) -> float:
         return (
             (self.get_mean_speed() + self.MEAN_SPEED_SHIFT)
-            * 2 * self.weight * self.duration * self.HOURS_IN_MINUTES
+            * self.CALORIES_MEAN_SPEED_MULTIPLIER
+            * self.weight * self.duration * 60
         )
 
     def get_mean_speed(self) -> float:
@@ -113,11 +117,12 @@ def read_package(workout_type: str, *args) -> Training:
     workout_classes = {
         'SWM': Swimming,
         'RUN': Running,
-        'WLK': SportWalking
+        'WLK': SportsWalking
     }
 
     if workout_type in workout_classes:
         workout_class_instance = workout_classes[workout_type]
+        # Передаем все аргументы, полученные из *args
         return workout_class_instance(*args)
     else:
         return Training(0, 0, 0)
