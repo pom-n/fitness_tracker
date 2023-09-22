@@ -24,6 +24,8 @@ class Training:
 
     LEN_STEP = 0.65
     M_IN_KM = 1000
+    HOURS_IN_MINUTES = 60
+
 
     def __init__(self, action: int, duration: float, weight: float) -> None:
         self.action = action
@@ -84,6 +86,8 @@ class Swimming(Training):
 
     LEN_STEP = 1.38
     M_IN_KM = 1000
+    MEAN_SPEED_SHIFT = 1.1
+
 
     def __init__(self, action: int, duration: float, weight: float,
                  length_pool: float, count_pool: int) -> None:
