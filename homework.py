@@ -26,7 +26,6 @@ class Training:
     M_IN_KM = 1000
     HOURS_IN_MINUTES = 60
 
-
     def __init__(self, action: int, duration: float, weight: float) -> None:
         self.action = action
         self.duration = duration
@@ -66,7 +65,7 @@ class Running(Training):
             (self.CALORIES_MEAN_SPEED_MULTIPLIER
              * self.get_mean_speed()
              + self.CALORIES_MEAN_SPEED_SHIFT)
-            * self.weight / self.M_IN_KM * self.duration * 60
+            * self.weight / self.M_IN_KM * self.duration * self.HOURS_IN_MINUTES
         )
 
 
@@ -77,7 +76,7 @@ class SportWalking(Training):
         return (
             (0.035 * self.weight
              + (self.get_mean_speed()**2 / self.weight)
-             * 0.029 * self.weight) * self.duration * 60
+             * 0.029 * self.weight) * self.duration * self.HOURS_IN_MINUTES
         )
 
 
@@ -87,7 +86,6 @@ class Swimming(Training):
     LEN_STEP = 1.38
     M_IN_KM = 1000
     MEAN_SPEED_SHIFT = 1.1
-
 
     def __init__(self, action: int, duration: float, weight: float,
                  length_pool: float, count_pool: int) -> None:
@@ -101,8 +99,8 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         return (
-            (self.get_mean_speed() + 1.1)
-            * 2 * self.weight * self.duration * 60
+            (self.get_mean_speed() + self.MEAN_SPEED_SHIFT)
+            * 2 * self.weight * self.duration * self.HOURS_IN_MINUTES
         )
 
     def get_mean_speed(self) -> float:
