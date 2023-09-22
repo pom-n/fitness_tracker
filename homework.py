@@ -86,6 +86,7 @@ class SportsWalking(Training):
     COFF_SP = 0.035
     COFFSP2 = 0.029
     MIN_IN_H = 60
+    TO_M_PER_SEC = 0.278
 
     def __init__(self, action: int, duration: float,
                  weight: float, height: float) -> None:
@@ -98,7 +99,7 @@ class SportsWalking(Training):
              + (self.get_mean_speed() ** 2 // self.height)
              * self.COFFSP2 * self.weight) * self.duration * self.MIN_IN_H
         )
-        return calories
+        return calories * self.TO_M_PER_SEC
 
 
 class Swimming(Training):
@@ -124,7 +125,7 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         calories = ((self.get_mean_speed() + self.COFF_1)
-                    * self.COFF_2 * self.weight)
+                    * self.weight * self.COFF_1)
         return calories
 
 
@@ -151,8 +152,9 @@ def read_package(workout_type: str, data: list) -> Training:
 def main(training: Training) -> None:
     """Главная функция."""
 
-    info_message = training.show_training_info()
-    print(info_message.get_message())
+    info = training.show_training_info()
+    message = info.get_message()
+    print(message)
 
 
 if __name__ == '__main__':
