@@ -87,11 +87,12 @@ class SportsWalking(Training):
     COFFSP2 = 0.029
     MIN_IN_H = 60
     TO_M_PER_SEC = 0.278
+    CM_TO_METERS = 100
 
     def __init__(self, action: int, duration: float,
                  weight: float, height: float) -> None:
         super().__init__(action, duration, weight)
-        self.height = height
+        self.height = height / self.CM_TO_METERS
 
     def get_spent_calories(self) -> float:
         calories = (
@@ -99,7 +100,7 @@ class SportsWalking(Training):
              + (self.get_mean_speed() ** 2 // self.height)
              * self.COFFSP2 * self.weight) * self.duration * self.MIN_IN_H
         )
-        return calories * self.TO_M_PER_SEC
+        return calories
 
 
 class Swimming(Training):
@@ -125,7 +126,7 @@ class Swimming(Training):
 
     def get_spent_calories(self) -> float:
         calories = ((self.get_mean_speed() + self.COFF_1)
-                    * self.weight * self.COFF_1)
+                    * self.weight * self.COFF_2)
         return calories
 
 
