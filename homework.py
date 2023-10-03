@@ -54,18 +54,19 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        raise NotImplementedError()
+        raise NotImplementedError(
+            'Реализуйте метод get_spent_calories в подклассе'
+        )
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
-        info = InfoMessage(
+        return InfoMessage(
             training_type=self.__class__.__name__,
             duration=self.duration,
             distance=self.get_distance(),
             speed=self.get_mean_speed(),
             calories=self.get_spent_calories()
         )
-        return info
 
 
 class Running(Training):
@@ -75,18 +76,17 @@ class Running(Training):
 
     def get_spent_calories(self) -> float:
         time_minutes = self.duration * self.MIN_IN_H
-        calories = (
+        return (
             (self.CALORIES_MEAN_SPEED_MULTIPLIER * self.get_mean_speed()
              + self.CALORIES_MEAN_SPEED_SHIFT)
             * self.weight / self.M_IN_KM * time_minutes
         )
-        return calories
 
 
 class SportsWalking(Training):
     """Тренировка: спортивная ходьба."""
-    COEFF_1 = 0.035
-    COEFF_2 = 0.029
+    COEFF_FOR_WEIGHT = 0.035
+    COEFF_SPEED = 0.029
     MIN_IN_H = 60
     TO_M_PER_SEC = 0.278
     CM_TO_METERS = 100
@@ -98,12 +98,12 @@ class SportsWalking(Training):
 
     def get_spent_calories(self) -> float:
         m_per_s_speed = self.get_mean_speed() * self.TO_M_PER_SEC
-        calories = (
-            (self.COEFF_1 * self.weight
+        return (
+            (self.COEFF_FOR_WEIGHT * self.weight
              + (m_per_s_speed ** 2 / self.height)
-             * self.COEFF_2 * self.weight) * (self.duration * self.MIN_IN_H)
+             * self.COEFF_SPEED * self.weight)
+            * (self.duration * self.MIN_IN_H)
         )
-        return calories
 
 
 class Swimming(Training):
@@ -119,16 +119,14 @@ class Swimming(Training):
         self.count_pool = count_pool
 
     def get_mean_speed(self) -> float:
-        mean_speed = (
+        return (
             self.length_pool * self.count_pool / self.M_IN_KM
             / self.duration
         )
-        return mean_speed
 
     def get_spent_calories(self) -> float:
-        calories = ((self.get_mean_speed() + self.COEFF_SWIM)
-                    * self.weight * self.COEFF_SWIM2 * self.duration)
-        return calories
+        return ((self.get_mean_speed() + self.COEFF_SWIM)
+                * self.weight * self.COEFF_SWIM2 * self.duration)
 
 
 workout_mapping: Dict[str, Type[Training]] = {
@@ -140,9 +138,7 @@ workout_mapping: Dict[str, Type[Training]] = {
 
 def read_package(workout_type: str, data: list) -> Training:
     if workout_type in workout_mapping:
-        action, duration, weight, *extra_data = data
-        workout_class = workout_mapping[workout_type]
-        return workout_class(action, duration, weight, *extra_data)
+        return workout_mapping[workout_type](*data)
     raise NotImplementedError('неподдерживаемый тип тренировки')
 
 
